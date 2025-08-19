@@ -23,7 +23,7 @@ Hosting: GitHub Pages / custom hosting (TBD)
 
 🛠️ Setup & Development
 1. Clone the repository
-git clone https://github.com/nolenphya/Queens-Culture-Map.git
+git clone https://github.com/flushingtownhall/QueensArtsMap.git
 cd Queens-Culture-Map
 2. Add your environment variables
 The project uses Mapbox and Airtable.
