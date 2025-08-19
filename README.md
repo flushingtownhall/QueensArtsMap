@@ -1,7 +1,7 @@
 Queens Arts & Culture Map
 An interactive map developed for Flushing Town Hall to highlight arts and cultural organizations across Queens, New York. Built with Mapbox GL JS, Airtable API, and a custom filtering/legend interface.
 
-🌐 Live Demo --> 
+🌐 Live Demo --> https://flushingtownhall.github.io/QueensArtsMap/
 
 📖 Project Overview
 This project was created as part of the Queens Cultural Mapping Project, an initiative funded by the New York State Council on the Arts (NYSCA). The map provides a centralized, accessible resource that connects artists, cultural organizations, and community spaces across Queens.
