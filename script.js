@@ -405,9 +405,9 @@ document.getElementById('reset-legend').addEventListener('click', () => {
 
 
 map.on('load', () => {
-    // Show info box by default when map loads
-    document.getElementById('map-guide-overlay').style.visibility = 'visible';
-
+  // =======================
+  // Load Custom Icons if Any
+  // =======================
   Object.values(iconMap).forEach(iconName => {
     map.loadImage(`icons/${iconName}.png`, (error, image) => {
       if (error) {
@@ -418,8 +418,20 @@ map.on('load', () => {
     });
   });
 
-  fetchData();
+  // =======================
+  // Fetch and Add Markers
+  // =======================
+  fetchData().then(records => {
+    const data = records.map(r => ({
+      id: r.id,
+      ...r.fields
+    }));
+    createMarkers(data);
+  });
 
+  // =======================
+  // Subway Lines Source + Layer
+  // =======================
   map.addSource('subway-lines', {
     type: 'geojson',
     data: 'nyc-subway-routes.geojson'
@@ -447,11 +459,15 @@ map.on('load', () => {
     }
   });
 
+  // =======================
+  // Subway Stops Source + Layers
+  // =======================
   map.addSource('subway-stops', {
     type: 'geojson',
     data: 'nyc-subway-stops.geojson'
   });
 
+  // Stop Circles
   map.addLayer({
     id: 'subway-stations-stops',
     type: 'circle',
@@ -463,7 +479,47 @@ map.on('load', () => {
       'circle-stroke-color': '#000000'
     }
   });
+
+  // Station Labels (Initially Hidden)
+  map.addLayer({
+    id: 'subway-station-labels',
+    type: 'symbol',
+    source: 'subway-stops',
+    layout: {
+      'text-field': ['get', 'name'],
+      'text-size': 12,
+      'text-offset': [0, 1.2],
+      'text-anchor': 'top',
+      'visibility': 'none'
+    },
+    paint: {
+      'text-color': '#000000',
+      'text-halo-color': '#ffffff',
+      'text-halo-width': 1
+    }
+  });
 });
+
+// =======================
+// Zoom-based Label Visibility
+// =======================
+map.on('zoom', () => {
+  const zoomLevel = map.getZoom();
+  map.setLayoutProperty(
+    'subway-station-labels',
+    'visibility',
+    zoomLevel >= 14 ? 'visible' : 'none'
+  );
+
+  // Show marker labels at same zoom level
+  allMarkers.forEach(marker => {
+    if (marker.labelElement) {
+      marker.labelElement.style.display = zoomLevel >= 14 ? 'block' : 'none';
+    }
+  });
+});
+
+
 
 // UI toggle logic
 map.addControl(new mapboxgl.NavigationControl({ showCompass: true }), 'top-right');
